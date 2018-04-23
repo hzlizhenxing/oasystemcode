@@ -1,0 +1,90 @@
+package com.zszd.ai.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.zszd.ai.pojo.Page;
+import com.zszd.ai.pojo.Post;
+import com.zszd.ai.service.post.PostService;
+import com.zszd.ai.service.post.PostServiceImpl;
+
+@Controller
+@RequestMapping("/sys/post")
+public class PostController {
+	private Logger logger = Logger.getLogger(PostController.class);
+
+	@Resource
+	PostService postService = new PostServiceImpl();
+
+	@RequestMapping(value = "view.html")
+	public String view(HttpServletRequest request) {
+		String keywords = request.getParameter("keywords");
+		if (keywords == null) {
+			keywords = "";
+		}
+
+		//获取当前页的页码
+		String currentPageNumStr = request
+				.getParameter("currPageNum");
+		int currentPageNum = 1;//默认当前页是第一页
+		if (currentPageNumStr != null) {
+			try {
+				currentPageNum = Integer.parseInt(currentPageNumStr);
+			} catch (Exception e) {//如果有字符串，就调到第一页
+				currentPageNum = 1;
+			}
+		}
+
+		//设置每页显示的数量
+		String pageSizeStr = request.getParameter("pageSize");
+		int pageSize = 10; // 默认每页显示8条记录
+		if (pageSizeStr != null) {
+			try {
+				pageSize = Integer.parseInt(pageSizeStr);
+			} catch (Exception e) {//如果有字符串，每页显示6条记录
+				pageSize = 10;
+			}
+		}
+
+		//设置总记录数
+		int totalCount = postService
+				.getPostInfoCountLikeName(keywords);
+
+		Page p = new Page();
+		p.setPageSize(pageSize);
+		p.setTotalCount(totalCount);
+
+
+		//判断总页数小于当前页
+		int totalPageNum = p.getTotalPageNum();
+		if (currentPageNum > totalPageNum) {
+			currentPageNum = totalPageNum;
+		}
+		
+		if(currentPageNum<1){
+		    currentPageNum=1;
+		}
+		p.setCurrentPageNum(currentPageNum);
+
+		List<Post> list = postService
+				.queryPostInfoLikeNamePage(p,keywords);
+		request.setAttribute("list", list);
+		request.setAttribute("keywords", keywords);
+		request.setAttribute("p", p);
+		return "post/post_list";
+	}
+	
+
+	// 实现跳转到添加帖子页
+	@RequestMapping(value = "/addPost.html")
+	public String addPost() {
+		return "post/post_add";
+	}
+
+}

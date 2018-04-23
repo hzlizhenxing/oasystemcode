@@ -1,0 +1,34 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="../common/header.jsp"%>
+<div id="right">
+	<div id="view">
+		<a href="/zszd/sys/functionRole/addfunction.html" >新增功能</a>
+		<table>
+			<c:if test="${requestScope.list!=null}">
+				<tr>
+					<th>功能序号&nbsp;&nbsp;</th>
+					<th>功能名称&nbsp;&nbsp;</th>
+					<th>功能配置路径&nbsp;&nbsp;</th>
+					<th>功能开发人员&nbsp;&nbsp;</th>
+					<th>操作权限</th>
+				</tr>
+				<c:forEach items="${requestScope.list}" var="functions"
+					varStatus="num">
+					<tr>
+						<td>${num.count}&nbsp;&nbsp;</td>
+						<td>${functions.functionName}&nbsp;&nbsp;</td>
+						<td>${functions.functionPath}&nbsp;&nbsp;</td>
+						<td>${functions.dev}&nbsp;&nbsp;</td>
+						<td><a
+							href="/zszd/sys/functionRole/modifyfunction.html?id=${functions.id}">修改</a>
+							<a
+							href="/zszd/sys/functionRole/deletefunction.html?id=${functions.id}">删除</a>
+						</td>
+					</tr>
+				</c:forEach>
+			</c:if>
+		</table>
+	</div>
+</div>
+</section>
+<%@ include file="../common/footer.jsp"%>

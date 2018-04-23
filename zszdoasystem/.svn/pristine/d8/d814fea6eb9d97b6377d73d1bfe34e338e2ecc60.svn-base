@@ -1,0 +1,53 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="../common/header.jsp"%>
+<div id="right">
+	<div id="add">
+		<div id="mess">${empty requestScope.message
+			?"":"验证信息:"}${requestScope.message}</div>
+		<form
+			action="${pageContext.request.contextPath}/sys/classes/toaddClasses.html"
+			method="post">
+			<table>
+				<tr>
+					<td colspan="3"><a>添加班级</a></td>
+				</tr>
+				<tr>
+					<td>班级名称：&nbsp;&nbsp;</td>
+					<td><input type="text" name="className" id="className">&nbsp;<font
+						color="red">*</font></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>班主任：&nbsp;&nbsp;</td>
+					<td><input type="text" name="classLeader" id="classLeader">&nbsp;<font
+						color="red">*</font></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>学术老师：&nbsp;&nbsp;</td>
+					<td><input type="text" name="classTeacher" id="classTeacher">&nbsp;<font
+						color="red">*</font></td>
+					<td></td>
+				</tr>
+
+				<tr>
+					<td colspan="3"><input type="submit" value="提交" id="submit">
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+</section>
+<%@ include file="../common/footer.jsp"%>
+<script type="text/javascript">
+	$("form").submit(function() {
+		var className = $("#className").val();
+		if (className.trim() == "") {
+			alert("班级名称不能为空！");
+			return false;
+		}
+		return true;
+	});
+</script>
+

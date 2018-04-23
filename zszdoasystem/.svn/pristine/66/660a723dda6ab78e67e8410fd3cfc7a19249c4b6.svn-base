@@ -1,0 +1,50 @@
+package com.zszd.ai.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.zszd.ai.pojo.Devgroup;
+import com.zszd.ai.service.devgroup.DevgroupService;
+import com.zszd.ai.service.devgroup.DevgroupServiceImpl;
+
+@Controller
+@RequestMapping("/sys/devgroup")
+public class DevgroupController {
+	private Logger logger = Logger.getLogger(DevgroupController.class);
+
+	@Resource
+	DevgroupService devgroupService = new DevgroupServiceImpl();
+	
+	
+	// 实现跳转到添加公司页
+	@RequestMapping(value = "/addDevgroup.html")
+	public String addDevgroup() {
+		return "/devgroup/devgroup_add";
+	}
+	
+	@RequestMapping(value="view.html")
+	public String view(HttpServletRequest request){	
+		List<Devgroup> list = devgroupService.queryAllDevGroupInfo();
+		request.setAttribute("list", list);
+		return "devgroup/devgroup_list";
+	}
+	
+	@RequestMapping(value="toaddDevgroup.html")
+	public String toaddDevgroup(HttpServletRequest request){
+		return null;
+
+	}
+	
+	
+	@RequestMapping(value="deleteDevgroup.html")
+	public String deleteDevgroup(HttpServletRequest request){	
+		return "devgroup/devgroup_list";
+	}
+	
+}

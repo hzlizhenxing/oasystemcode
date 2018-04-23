@@ -1,0 +1,65 @@
+package com.zszd.ai.controller;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.zszd.ai.constants.Constants;
+import com.zszd.ai.pojo.SysUser;
+import com.zszd.ai.service.sysuser.SysUserService;
+import com.zszd.ai.service.sysuser.SysUserServiceImpl;
+import com.zszd.ai.utils.MakeMD5;
+
+@Controller
+public class LoginController {
+	private Logger logger = Logger.getLogger(LoginController.class);
+
+	@Resource
+	SysUserService sysUserService = new SysUserServiceImpl();
+	
+	//实现跳转到登录页
+	@RequestMapping(value="/login.html")
+	public String login(){
+		return "login";
+	}
+	
+	//实现登录
+    @RequestMapping(value="/dologin.html",method=RequestMethod.POST)
+    public String doLogin(@RequestParam String logname,@RequestParam String logpass,HttpServletRequest request,HttpSession session) 
+    		throws Exception{
+    	logger.info("doLogin====");
+    	// 采用MD5算法加密
+    	logpass= MakeMD5.getMD5(logpass);
+    	SysUser sysUser = sysUserService.login(logname,logpass);
+    	if(null != sysUser){//登录成功
+    		session.setAttribute(Constants.SYSUSER_SESSION, sysUser);
+    		
+    		//页面跳转
+    		return "redirect:/sys/main.html";
+    	}else{
+    		request.setAttribute("error", "用户名或者密码不正确");
+    		//页面跳转
+    		return "login";
+    	}
+    }
+	
+    @RequestMapping(value="logout.html")
+    public String logout(HttpSession session){
+    	session.removeAttribute(Constants.SYSUSER_SESSION);
+    	return "login";
+    }
+    
+    @RequestMapping(value="/sys/main.html")
+    public String main(){
+    	return "userindex";
+    }
+    
+    
+
+}

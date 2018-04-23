@@ -1,0 +1,87 @@
+package com.zszd.ai.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zszd.ai.pojo.FunctionRole;
+import com.zszd.ai.pojo.SysUser;
+import com.zszd.ai.service.sysfunctions.FunctionRoleService;
+import com.zszd.ai.service.sysfunctions.FunctionRoleServiceImpl;
+import com.zszd.ai.tools.Constants;
+
+@Controller
+@RequestMapping("/sys/functionRole")
+public class FunctionRoleController {
+
+	private Logger logger = Logger.getLogger(FunctionRoleController.class);
+
+	@Resource
+	FunctionRoleService functionRoleService = new FunctionRoleServiceImpl();
+	
+	
+	// 实现跳转到添加配置页
+	@RequestMapping(value = "/addfunctionRole.html")
+	public String addCompany() {
+		return "/functionRole/functionRole_add";
+	}
+
+	// 根据角色查看对应的功能
+	@RequestMapping(value = "/queryFunctionRoleByRoleId.html", method = RequestMethod.GET)
+	@ResponseBody
+	public List<FunctionRole> queryFunctionRoleByRoleId(HttpSession session) {
+		int roleId = ((SysUser) session.getAttribute(Constants.SYSUSER_SESSION))
+				.getRoleId();
+		List<FunctionRole> funList = functionRoleService
+				.queryAllFunctionRoleInfoByRoleId(roleId);
+		return funList;
+	}
+
+	// 查看所有的功能角色配置
+	@RequestMapping(value = "/queryAllFunctionRoleInfo.html")
+	public String queryAllFunctionRoleInfo(HttpServletRequest request) {
+		List<FunctionRole> funList = functionRoleService
+				.queryAllFunctionRoleInfo();
+		request.setAttribute("list", funList);
+		return "functionRole/functionRole_list";
+	}
+
+	// 删除配置
+	@RequestMapping(value = "/delConfig.html")
+	public String delConfig(HttpServletRequest request) {
+		int functionRoleId = Integer.parseInt(request.getParameter("id"));
+		int rows = functionRoleService
+				.delFunctionRoleConfigInfoById(functionRoleId);
+		if (rows > 0) {
+			return "redirect:/sys/functionRole/queryAllFunctionRoleInfo.html";
+		} else {
+			request.setAttribute("error", "删除失败，请联系管理员");
+			return "redirect:/sys/functionRole/queryAllFunctionRoleInfo.html";
+		}
+	}
+
+	// 添加配置
+	@RequestMapping(value = "/toaddConfig.html")
+	public String toaddConfig(HttpServletRequest request) {
+		int roleId = Integer.parseInt(request.getParameter("roleId"));
+		int functionId = Integer.parseInt(request.getParameter("functionId"));
+		FunctionRole functionRole = new FunctionRole();
+		functionRole.setRoleId(roleId);
+		functionRole.setFunctionId(functionId);
+		int rows = functionRoleService.addFunctionRoleInfo(functionRole);
+		if (rows > 0) {
+			return "redirect:/sys/functionRole/queryAllFunctionRoleInfo.html";
+		} else {
+			request.setAttribute("error", "添加失败，请联系管理员");
+			return "redirect:/sys/functionRole/addConfig.html";
+		}
+	}
+}

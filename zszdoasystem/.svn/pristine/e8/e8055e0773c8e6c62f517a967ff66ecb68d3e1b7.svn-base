@@ -1,0 +1,43 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="../common/header.jsp"%>
+<style>
+#modifypassword {
+	padding-top: 50px;
+	padding-left: 50px;
+	width: 50%;
+	height: 30%;
+}
+
+span {
+	font-size: 30px;
+}
+</style>
+<div id="right">
+	<div id="modifypassword">
+		<form
+			action="${pageContext.request.contextPath}/sys/user/tomodifypassword.html"
+			method="post">
+			<table>
+				<tr>
+					<td><span>请输入旧密码：</span></td>
+					<td><input type="password" name="oldPassword"></td>
+				</tr>
+				<tr>
+					<td><span>请输入新密码：</span></td>
+					<td><input type="password" name="newPassword"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><input type="submit" value="提交修改 "></td>
+				</tr>
+				<tr>
+					<td>
+						<h1 style="color:red;">${error}</h1></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+</section>
+<%@ include file="../common/footer.jsp"%>
+

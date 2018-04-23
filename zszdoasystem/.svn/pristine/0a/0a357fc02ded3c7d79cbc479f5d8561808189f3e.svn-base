@@ -1,0 +1,34 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="../common/header.jsp"%>
+<div id="right">
+	<div id="view">
+		<a href="${pageContext.request.contextPath}/sys/classes/addClasses.html">添加班级</a>
+		<table>
+			<c:if test="${requestScope.list!=null}">
+				<tr>
+				    <th>序号&nbsp;&nbsp;</th>
+					<th>班级名称&nbsp;&nbsp;</th>
+					<th>班主任&nbsp;&nbsp;</th>
+					<th>学术老师&nbsp;&nbsp;</th>
+					<th>操作权限&nbsp;&nbsp;</th>
+				</tr>
+				<c:forEach items="${requestScope.list}" var="classes" varStatus="num">
+					<tr>
+					    <td>${num.count}&nbsp;&nbsp;</td>
+						<td>${classes.className}&nbsp;&nbsp;</td>
+						<td>${classes.classLeader}&nbsp;&nbsp;</td>
+						<td>${classes.classTeacher}&nbsp;&nbsp;</td>
+						<td><c:if test="${sessionScope.employee_Session.roleId == 1}">
+								<a href="/zszd/sys/classes/modifyclasses.html?id=${classes.id}">修改</a>
+							    <a href="/zszd/sys/classes/deleteclasses.html?id=${classes.id}">删除</a>
+							</c:if>
+						</td>
+					</tr>
+				</c:forEach>
+			</c:if>
+		</table>
+	</div>
+</div>
+</section>
+<%@ include file="../common/footer.jsp"%>
+

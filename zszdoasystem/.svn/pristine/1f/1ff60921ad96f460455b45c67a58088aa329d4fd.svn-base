@@ -1,0 +1,50 @@
+package com.zszd.ai.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.zszd.ai.pojo.Department;
+import com.zszd.ai.service.department.DepartmentService;
+import com.zszd.ai.service.department.DepartmentServiceImpl;
+
+@Controller
+@RequestMapping("/sys/department")
+public class DepartmentController {
+	private Logger logger = Logger.getLogger(DepartmentController.class);
+
+	@Resource
+	DepartmentService departmentService = new DepartmentServiceImpl();
+	
+	
+	// 实现跳转到添加公司页
+	@RequestMapping(value = "/addDepartment.html")
+	public String addDepartment() {
+		return "/department/department_add";
+	}
+	
+	//查看所有的部门  经理级别  
+	@RequestMapping(value="view.html")
+	public String view(HttpServletRequest request){	
+		List<Department> list = departmentService.queryDepartmentInfo();
+		request.setAttribute("list", list);
+		return "department/department_list";
+	}
+	
+	@RequestMapping(value="toaddDepartment.html")
+	public String toaddDepartment(HttpServletRequest request){
+		return null;
+	}
+	
+	
+	@RequestMapping(value="deleteDepartment.html")
+	public String deleteDepartment(HttpServletRequest request){	
+		return "department/department_list";
+	}
+	
+}

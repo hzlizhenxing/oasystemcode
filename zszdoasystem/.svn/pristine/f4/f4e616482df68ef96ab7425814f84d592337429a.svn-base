@@ -1,0 +1,112 @@
+package com.zszd.ai.service.bugs;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Service;
+
+import com.zszd.ai.dao.bugs.BugsDao;
+import com.zszd.ai.pojo.Bugs;
+import com.zszd.ai.tools.MyBatisUtil;
+
+@Service
+public class BugsServiceImpl implements BugsService {
+	@Resource
+	private BugsDao bugsDao;
+
+	@Override
+	public List<Bugs> queryAllDebugsInfo() {
+		return bugsDao.queryAllDebugsInfo();
+	}
+
+	@Override
+	public int addBugsInfo(Bugs bugs) {
+		SqlSession sqlsession = null;
+		int row = 0;
+		try {
+			sqlsession = MyBatisUtil.createSqlSession();
+			row = sqlsession.getMapper(BugsDao.class).addBugsInfo(bugs);
+			sqlsession.commit();
+		} catch (Exception e) {
+			sqlsession.rollback();
+			e.printStackTrace();
+		} finally {
+			MyBatisUtil.closeSqlSession(sqlsession);
+		}
+		return row;
+	}
+
+	@Override
+	public Bugs getBugsById(int id) {
+		Bugs bugs = null;
+		SqlSession sqlsession = null;
+		try {
+			sqlsession = MyBatisUtil.createSqlSession();
+			bugs = sqlsession.getMapper(BugsDao.class).getBugsById(id);
+			sqlsession.commit();
+		} catch (Exception e) {
+			sqlsession.rollback();
+			e.printStackTrace();
+		} finally {
+			MyBatisUtil.closeSqlSession(sqlsession);
+		}
+		return bugs;
+	}
+
+	@Override
+	public int updateBugsInfo(Bugs bugs) {
+		SqlSession sqlsession = null;
+		int row = 0;
+		try {
+			sqlsession = MyBatisUtil.createSqlSession();
+			row = sqlsession.getMapper(BugsDao.class).updateBugsInfo(bugs);
+			sqlsession.commit();
+		} catch (Exception e) {
+			sqlsession.rollback();
+			e.printStackTrace();
+		} finally {
+			MyBatisUtil.closeSqlSession(sqlsession);
+		}
+		return row;
+	}
+
+	@Override
+	public List<Bugs> queryAllDebugsInfoByCompanyId(int companyId) {
+		List<Bugs> bugList = null;
+		SqlSession sqlsession = null;
+		try {
+			sqlsession = MyBatisUtil.createSqlSession();
+			bugList = sqlsession.getMapper(BugsDao.class)
+					.queryAllDebugsInfoByCompanyId(companyId);
+			sqlsession.commit();
+		} catch (Exception e) {
+			sqlsession.rollback();
+			e.printStackTrace();
+		} finally {
+			MyBatisUtil.closeSqlSession(sqlsession);
+		}
+		return bugList;
+	}
+
+	@Override
+	public List<Bugs> queryAllDebugsInfoByCompanyIdAndName(int companyId,
+			String name) {
+		List<Bugs> bugList = null;
+		SqlSession sqlsession = null;
+		try {
+			sqlsession = MyBatisUtil.createSqlSession();
+			bugList = sqlsession.getMapper(BugsDao.class)
+					.queryAllDebugsInfoByCompanyIdAndName(companyId, name);
+			sqlsession.commit();
+		} catch (Exception e) {
+			sqlsession.rollback();
+			e.printStackTrace();
+		} finally {
+			MyBatisUtil.closeSqlSession(sqlsession);
+		}
+		return bugList;
+	}
+
+}

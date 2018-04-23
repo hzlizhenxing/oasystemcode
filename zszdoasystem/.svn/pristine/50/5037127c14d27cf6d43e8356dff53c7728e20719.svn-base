@@ -1,0 +1,55 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="../common/header.jsp"%>
+<style>
+#view {
+	padding: 50px;
+}
+
+#view a {
+	text-decoration: none;
+	color: red;
+	font-size: 26px;
+	color: red;
+}
+
+#view table {
+	border: 1px solid red;
+}
+
+#view td,#view th {
+	border: 1px solid red;
+}
+</style>
+<div id="right">
+	<div id="view">
+		<table>
+			<c:if test="${requestScope.list!=null}">
+				<tr>
+					<th>部门名称&nbsp;&nbsp;&nbsp;&nbsp;</th>
+					<th>所属公司&nbsp;&nbsp;&nbsp;&nbsp;</th>
+					<th>成立时间&nbsp;&nbsp;&nbsp;&nbsp;</th>
+					<th>操作权限</th>
+				</tr>
+				<c:forEach items="${requestScope.list}" var="department">
+					<tr>
+						<td>${department.name}&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>${department.companyName}&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>${department.buildTime}&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td><c:if test="${sessionScope.roleId eq 4}">
+								<a href="department?opr=modify&departmentId=${department.id}"
+									style="color:red">修改</a>
+								<br />
+								<a href="department?opr=delete&departmentId=${department.id}"
+									style="color:red">删除</a>
+							</c:if> <c:if test="${sessionScope.roleId ne 4}">
+								<a>目前只对总裁开放管理权限</a>
+							</c:if></td>
+					</tr>
+				</c:forEach>
+			</c:if>
+		</table>
+	</div>
+</div>
+</section>
+<%@ include file="../common/footer.jsp"%>
+
